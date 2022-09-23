@@ -1,6 +1,6 @@
 import '../App.css';
 import './modal.css';
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import Banner from './Banner';
 import TableBalance from './Table';
 
@@ -56,7 +56,26 @@ class MainPage extends Component {
 }
 
 const Modal = ({ handleClose, show, children }) => {
+
   const showHideClassName = show ? "display-block" : "display-none";
+
+  const [title, setTitle] = useState('');
+
+  const [type, setType] = useState('alimentaire');
+
+  const [montant, setMontant] = useState(0);
+
+  const handleChange = event => {
+    setTitle(event.target.value);
+  }
+
+  const handleChangeType = event => {
+    setType(event.target.value);
+  }
+
+  const handleChangeMontant = event => {
+    setMontant(event.target.value);
+  }
 
   return (
     <div className={showHideClassName}>
@@ -68,30 +87,30 @@ const Modal = ({ handleClose, show, children }) => {
           </div>
           <div className="p-6 space-y-6">
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-              < label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="title">
+              < label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="title" >
                 Titre 
               </label>
-              <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="text" placeholder="Courses"></input>
+              <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="text" placeholder="Courses" value={title} onChange={handleChange}></input>
             </div>
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               < label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="title">
                 Type 
               </label>
-              <select className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title">
-                <option>Alimentaire</option>  
-                <option>Transport</option>
-                <option>Loisir</option>
-                <option>Autre</option>
+              <select className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" onChange={handleChangeType} value={type}> 
+                <option value="alimentaire">Alimentaire</option>  
+                <option value="transport">Transport</option>
+                <option value="loisir">Loisir</option>
+                <option value="autre">Autre</option>
               </select>
             </div>
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
               < label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="title">
                 Montant 
               </label>
-              <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="number" step='0.1' placeholder="0"></input>
+              <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="number" step='0.1' placeholder="0" value={montant} onChange={handleChangeMontant}></input>
             </div>
             <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <button className="cursor-pointer bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full disabled:bg-green-900 disabled:cursor-not-allowed" onClick={()  => console.log("there")}>
+                <button className="cursor-pointer bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full disabled:bg-green-900 disabled:cursor-not-allowed" onClick={()  => console.log("message")}>
                   Clone
                 </button>
             </div>
