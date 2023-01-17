@@ -1,57 +1,69 @@
-import React, {Component, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import TableBalance from './Table';
 import Depenses from './Depenses';
 import './modal.css';
 
-class MainPage extends Component { 
 
-    constructor() {
-      super();
-      this.state = {
-        show: false
-      };
-      this.showModal = this.showModal.bind(this);
-      this.hideModal = this.hideModal.bind(this);
-    }
+function MainPage(){
   
-    showModal = () => {
-      this.setState({ show: true });
-    };
+  const [depenses, setDepenses] = useState([]);
+
+  const [show, setShow] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+
+  const showModal = () => {
+    setShow(true);
+  };
   
-    hideModal = () => {
-      this.setState({ show: false });
-    };
-  
-    render() {
-        return (
-            <div className="content-center items-center">
-                <div className="text-center">
-                    <h1 className="text-slate-500 m-auto">Balance actuelle</h1>
-                </div>
-                <div className="w-full">
-                  <TableBalance/>
-                </div>
-                <div className="text-center">
-                    <h1 className="text-slate-500 m-auto">Dépenses</h1>
-                </div>
-                <div className="w-full">
-                  <Depenses data={this.props.data}/>
-                </div>
-                <div className="flex items-center">
-                  {this.ButtonAdd()}
-                </div>
-                <Modal show={this.state.show} handleClose={this.hideModal}>
-                <p></p>
-              </Modal>
-             </div>
-        );
-    }
-  
-    ButtonAdd(){
-      return <button className="rounded-full bg-lime-400 text-lime-800 px-4 py-2 m-auto" onClick={this.showModal} >Ajouter une dépense</button>
-    }
-  
+  const hideModal = async () => {
+    setShow(false);
+    setIsLoading(true);
+    await delay(2000);
+    await getDepenses();
+    setIsLoading(false);
+  };
+
+   
+  const getDepenses = async() => {
+    const reponse = await fetch ('http://localhost:4000/depenses').then((response)  => response.json());
+    setDepenses(reponse);
   }
+
+  useEffect(() => {
+    getDepenses();
+  }, []); 
+
+  const ButtonAdd = () => {
+    return <button className="rounded-full bg-lime-400 text-lime-800 px-4 py-2 m-auto" onClick={showModal} >Ajouter une dépense</button>
+  }
+    
+  return (
+    <div className={`content-center items-center ${isLoading ? "blur-sm" : ""}`} >
+        <div className="text-center">
+            <h1 className="text-slate-500 m-auto">Balance actuelle</h1>
+        </div>
+        <div className="w-full">
+          <TableBalance/>
+        </div>
+        <div className="text-center">
+            <h1 className="text-slate-500 m-auto">Dépenses</h1>
+        </div>
+        <div className="w-full">
+          <Depenses data={depenses}/>
+        </div>
+        <div className="flex items-center">
+          {ButtonAdd()}
+        </div>
+        <Modal show={show} handleClose={hideModal}>
+        <p></p>
+      </Modal>
+      </div>
+    );  
+  }
+
   
   const Modal = ({ handleClose, show, children }) => {
   
@@ -112,6 +124,7 @@ class MainPage extends Component {
         setErr(err.message);
       } finally {
         setIsLoading(false);
+        handleClose();
       }
     };
   
@@ -150,7 +163,7 @@ class MainPage extends Component {
                 <input className="appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-100 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="title" type="number" step='0.1' placeholder="0" value={montant} onChange={handleChangeMontant}></input>
               </div>
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                  <button className="cursor-pointer bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full disabled:bg-green-900 disabled:cursor-not-allowed" onClick={addValue} >
+                  <button className="cursor-pointer bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full disabled:bg-green-900 disabled:cursor-not-allowed" onClick={addValue} disabled={isLoading}>
                     Ajouter
                   </button>
                   
@@ -161,5 +174,5 @@ class MainPage extends Component {
       </div>
     );
     }
-
+  
 export default MainPage;

@@ -33,12 +33,11 @@ app.listen(port, host);
 app.post('/depense', function(request, response) {
     console.log('POST /depense')
     let newDep = request.body
-    let rawdata = fs.readFileSync('./depenses.json');
+    let rawdata = fs.readFileSync('./server/depenses.json');
     let alldeps = JSON.parse(rawdata);
-    let news = [];
     alldeps.push(newDep);
     let data = JSON.stringify(alldeps, null, 4);
-    fs.writeFileSync("./catalogs.json", data)
+    fs.writeFileSync("./server/depenses.json", data)
     response.setHeader('Content-Type', 'application/json');
     response.end(data)
   
