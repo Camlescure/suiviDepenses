@@ -1,0 +1,12 @@
+[
+    {
+        "titre": "courses", 
+        "montant": 115, 
+        "type": "alimentaire"
+    }, 
+    {
+        "titre": "train paris", 
+        "montant": 70, 
+        "type": "transport"
+    }
+]
